@@ -6,6 +6,17 @@
 	<meta name='viewport' content="width=device-width, initial-scale-1">
 </head>
 <style>
+	body {
+		background-color: #8ad3e8;
+	}
+	.app {
+		background-color: #e3f6fb;
+		width: 70%;
+		height: 600px;
+		padding-top: 10px;
+		margin: auto;
+		border-radius:5px;
+	}
 	.todo-list-elem-dot {
 		text-decoration: line-through;
 	}
@@ -13,8 +24,10 @@
 		height: 20px;
 		line-height: 20px;
 		text-align: start;
-		width: 150px;
-		border: 1px solid black;
+		width: 200px;
+		margin-bottom: 5px;
+		border: 1px solid #699faf;
+		box-shadow: 3px 2px 5px rgba(156, 192, 194, 0.9);
 	}
 	.todo-list-elem:hover {
 		cursor: pointer;
@@ -24,28 +37,79 @@
 		height: 20px;
 		margin: 0;
 		padding: 0;
-		outline: 1px solid black;
 		float: right;
+		background-image: url('close.png');
+		background-color: transparent;
+		border: none;
+	}
+	.close:hover {
+		cursor: pointer;
+		background-color: rgba(0,0,0,0.1);
 	}
 	.hide {
 		display: none;
 	}
+	#write-todo {
+		width: 350px;
+		margin: auto;
+	}
+	#todo-list {
+		width: 350px;
+		margin: auto;
+	}
+	#add-button {
+		width: 80px;
+		height: 30px;
+		background-color: transparent;
+		border: 1px solid #699faf;
+		box-shadow: 3px 2px 5px rgba(156, 192, 194, 0.9);
+	}
+	#add-button:hover {
+		background-color: #8ad3e8;
+		color: white;
+	}
+	#removeAll-button {
+		width: 80px;
+		height: 30px;
+		background-color: transparent;
+		border: 1px solid #699faf;
+		box-shadow: 3px 2px 5px rgba(156, 192, 194, 0.9);
+	}
+	#removeAll-button:hover {
+		background-color: #8ad3e8;
+		color: white;
+	}
+	#text {
+		border: 1px solid #699faf;
+		width: 170px;
+		height: 23px;
+		background-color: transparent;
+		box-shadow: 3px 2px 5px rgba(156, 192, 194, 0.9);
+	}
+	#text:hover {
+		outline: 1px solid #20829e;
+	}
+	#text:focus {
+		outline: 1px solid #20829e;
+	}
 	
 </style>
 <body>
+	<div class='app'>
 	<div id='write-todo'>
 		<input id='text' type='text'>
 		<button id='add-button'>Добавить</button>
 		<button class='hide' id='removeAll-button'>Очистить</button>
 	</div>
 	<div id='todo-list'>
-		<ol>
+		<ol id='list'>
 			<li class='todo-list-elem' v-on:click='addClass' v-for='(todo, index) in todos'>
 				{{todo}}
 				<button v-on:click='deleteElem' class='close'></button>
 			</li>
 		</ol>
 	</div>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 <script>
 	let todo = new Vue({
@@ -64,20 +128,28 @@
 				}
 			},
 			deleteElem : function(e) {
-				e.target.parentElement.remove()
+				let nodes = Array.prototype.slice.call(document.getElementById('list').children)
+				this.todos.splice(nodes.indexOf(e.target.parentNode),1)
+				if(this.todos.length === 0) document.getElementById('removeAll-button').classList.add('hide')
 			}
 		}
 	})
 	let button = document.getElementById('add-button')
 	let textArea = document.getElementById('text')
 	let textAreaBox = document.getElementById('write-todo')
+	let removeBut = document.getElementById('removeAll-button')
 	let elem = document.getElementsByClassName('todo-list-elem')
 
 	button.addEventListener('click', ()=>{
 		if(textArea.value !== '') {
 			todo.todos.push(textArea.value)
 			textArea.value = ''
+			removeBut.classList.remove('hide')
 		}
+	})
+	removeBut.addEventListener('click', () => {
+		todo.todos = []
+		removeBut.classList.add('hide')
 	})
 
 
