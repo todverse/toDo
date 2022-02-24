@@ -151,11 +151,16 @@
 		todo.todos = []
 		removeBut.classList.add('hide')
 	})
+	let ctrl = false
 	document.addEventListener('keydown', (e) => {
 		if(e.key === 'Enter') {
 			button.click()
-		} else if(e.key === 'Backspace') {
+			ctrl = false
+		} else if(e.key === 'Control') {
+			ctrl = true
+		} else if(e.key ==='Backspace' && ctrl) {
 			removeBut.click()
+			ctrl = false
 		}
 	})
 
